@@ -1,61 +1,52 @@
 import React, { Suspense, useEffect, useState } from "react";
 // Import THREE for the LoopRepeat constant
 import * as THREE from 'three'; 
-// Import useFrame from @react-three/fiber for continuous updates
-import { Canvas, useFrame } from "@react-three/fiber";
+// 🟢 UPDATED IMPORT: Include useThree
+import { Canvas, useFrame, useThree } from "@react-three/fiber"; 
 // Import useAnimations from @react-three/drei
 import { OrbitControls, Preload, useGLTF, useAnimations } from "@react-three/drei";
 
 import CanvasLoader from "../Loader"; // Assuming this path is correct
 
 const Computers = ({ isMobile }) => {
-  // Destructure scene and animations from useGLTF
   const { scene, animations } = useGLTF("./desktop_pc/scene.gltf");
-  
-  // Use useAnimations to get the mixer, actions, and the ref
   const { ref, mixer, actions, names } = useAnimations(animations, scene);
+
+  // 🟢 NEW: Get the invalidate function
+  const { invalidate } = useThree(); 
 
   useEffect(() => {
     if (names.length > 0) {
       const action = actions[names[0]];
-      
-      // 1. Set the loop mode to repeat indefinitely (LoopRepeat)
       action.setLoop(THREE.LoopRepeat, Infinity);
-      
-      // 2. Play the animation automatically
       action.play();
     }
   }, [actions, names]); 
 
-  // 3. Update the animation mixer on every frame using useFrame
   useFrame((state, delta) => {
+    // 1. Update the animation mixer
     mixer.update(delta);
+    
+    // 2. 🟢 CRITICAL FIX: Force a render update
+    invalidate(); 
   });
 
   return (
     <mesh>
-      <hemisphereLight intensity={0.15} groundColor='black' />
-      {/* SPOT LIGHT: Repositioned to be closer and slightly above/in front of the model */}
+      <hemisphereLight intensity={0.25} groundColor='black' /> 
       <spotLight
-        // Updated position from [-20, 50, 10] to [5, 10, 5] 
-        // This places it closer to the origin (where the object is centered)
-        // [X: slightly right, Y: higher up, Z: slightly forward/closer]
         position={[5, 30, 5]} 
         angle={0.12}
         penumbra={1}
-        intensity={8}
+        intensity={2.5} // Optimized intensity
         castShadow
-        shadow-mapSize={1024}
+        shadow-mapSize={512} // Optimized shadow map size
       />
-      {/* POINT LIGHT: Repositioned to provide ambient front/side illumination */}
       <pointLight 
-        intensity={5} 
-        // Updated position from [0, 0, 0] to [-5, 5, 0]
-        // This places it to the left, slightly up, and near the object's center
+        intensity={1.5} // Optimized intensity
         position={[-15, 15, 0]}
       />
       <primitive
-        // 4. Attach the ref to the primitive/scene object
         ref={ref} 
         object={scene}
         scale={isMobile ? 0.0012 : 0.0015}
@@ -70,21 +61,12 @@ const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Add a listener for changes to the screen size
     const mediaQuery = window.matchMedia("(max-width: 500px)");
-
-    // Set the initial value of the `isMobile` state variable
     setIsMobile(mediaQuery.matches);
-
-    // Define a callback function to handle changes to the media query
     const handleMediaQueryChange = (event) => {
       setIsMobile(event.matches);
     };
-
-    // Add the callback function as a listener for changes to the media query
     mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
     return () => {
       mediaQuery.removeEventListener("change", handleMediaQueryChange);
     };
@@ -92,8 +74,8 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
-      // 🚀 THE CRITICAL FIX: Change 'demand' to 'always' to enable continuous rendering
-      frameloop='always' 
+      // 🟢 OPTIMIZED: Render only on 'demand'
+      frameloop='demand' 
       shadows
       dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
