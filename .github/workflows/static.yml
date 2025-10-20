@@ -1,11 +1,9 @@
-# Simple workflow to build and deploy the Vite project
-
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main # Change this if your main branch is not named 'main'
+      - main # Triggers on push to the main branch
 
 jobs:
   build-and-deploy:
@@ -19,10 +17,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Use a stable Node.js version
+          node-version: 20 # Using a stable Node.js version
 
       - name: Install dependencies 🔧
-        run: npm install
+        # 🟢 CRITICAL FIX: Add --legacy-peer-deps to resolve ERESOLVE error
+        run: npm install --legacy-peer-deps
 
       - name: Build project 🏗️
         run: npm run build
@@ -32,4 +31,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist # Tells the action to publish the contents of the /dist folder
-          cname: # Leave blank unless you have a custom domain
+          cname: # Leave blank
