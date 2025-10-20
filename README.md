@@ -20,7 +20,7 @@ This is my personal professional portfolio, designed to showcase my skills, proj
 | **Styling** | **Tailwind CSS** (for utility-first styling), Custom CSS |
 | **3D Graphics** | **Three.js** (via `@react-three/fiber` and `@react-three/drei`) |
 | **Build Tool** | **Vite** |
-| **Deployment** | Vercel / Netlify (or other service) |
+| **Deployment** | github / Netlify (or other service) |
 
 -----
 
@@ -75,6 +75,6 @@ To fully personalize this portfolio:
 
 ## 📧 Contact
 
-**Gokulraj M** – [Insert your Email Address] – [Insert your LinkedIn Profile Link]
+**Gokulraj M** – gokulraj.gokul3003@gmail.com – (https://www.linkedin.com/in/gokul-raj3003/)
 
 Project Link: **[https://github.com/gokulraj9488/Gokulraj-portfolio](https://github.com/gokulraj9488/Gokulraj-portfolio)**
