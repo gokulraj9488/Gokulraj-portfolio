@@ -1,0 +1,15 @@
+[33meb68d8d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Final asset path fix and performance push
+[33m7ce97fe[m[33m ([m[1;31morigin/main[m[33m)[m Merge branch 'main' of https://github.com/gokulraj9488/Gokulraj-portfolio
+[33m8f36bae[m Performance: Final 3D optimization and anti-lag measures
+[33m7911539[m contact update
+[33m710eb7e[m Merge remote-tracking branch 'origin/main' into main
+[33m7e6f290[m Perfomance Optimization
+[33mfb456d5[m Final asset path check
+[33m0d6b480[m Create static.yml
+[33m1a96ef8[m Configure gh-pages deployment scripts
+[33m2ee1bfc[m Final fix: Added trailing slash to Vite base URL
+[33m29a5c33[m Configure Vite base path for GH Pages
+[33m8ba61f2[m Allow dist folder for GitHub Pages deployment
+[33m71c2da9[m Add README for Gokulraj M portfolio
+[33m9d29dec[m optimized
+[33me948719[m first commit

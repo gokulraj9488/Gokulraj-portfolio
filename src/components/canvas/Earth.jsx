@@ -17,9 +17,15 @@ const EarthCanvas = () => {
   return (
     <Canvas
       shadows
-      frameloop='demand'
-      dpr={[1, 2]}
-      gl={{ preserveDrawingBuffer: true }}
+      // 🟢 OPTIMIZATION: Only render when necessary or when interacted with
+      frameloop='demand' 
+      // 🟢 OPTIMIZATION: Use optimized DPR cap
+      dpr={[1, 1.5]}
+      gl={{ 
+        preserveDrawingBuffer: true,
+        // 🟢 FIX: Ensure transparency to prevent black background overlap
+        alpha: true 
+      }} 
       camera={{
         fov: 45,
         near: 0.1,
@@ -29,9 +35,13 @@ const EarthCanvas = () => {
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
-          autoRotate
-          autoRotateSpeed={3}
+          // 🛑 CRITICAL OPTIMIZATION: Disable continuous rotation
+          autoRotate={false} 
+          // 🛑 CRITICAL OPTIMIZATION: Disable rotation speed property (it's unused without autoRotate)
+          // autoRotateSpeed={20} 
           enableZoom={false}
+          // 🟢 ENABLE MANUAL ROTATION: Allow user to drag the model
+          enableRotate={true} 
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />

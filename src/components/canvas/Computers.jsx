@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 // Import THREE for the LoopRepeat constant
 import * as THREE from 'three'; 
-// 🟢 UPDATED IMPORT: Include useThree
+// UPDATED IMPORT: Include useThree
 import { Canvas, useFrame, useThree } from "@react-three/fiber"; 
 // Import useAnimations from @react-three/drei
 import { OrbitControls, Preload, useGLTF, useAnimations } from "@react-three/drei";
@@ -12,40 +12,45 @@ const Computers = ({ isMobile }) => {
   const { scene, animations } = useGLTF("./desktop_pc/scene.gltf");
   const { ref, mixer, actions, names } = useAnimations(animations, scene);
 
-  // 🟢 NEW: Get the invalidate function
+  // Get the invalidate function to force rendering on demand
   const { invalidate } = useThree(); 
 
   useEffect(() => {
     if (names.length > 0) {
       const action = actions[names[0]];
       action.setLoop(THREE.LoopRepeat, Infinity);
+      
+      // Setting timeScale to 1.0 ensures animation runs at normal speed
+      mixer.timeScale = 1.0; 
       action.play();
     }
-  }, [actions, names]); 
-
+  }, [actions, names, mixer]); 
+  
   useFrame((state, delta) => {
     // 1. Update the animation mixer
     mixer.update(delta);
     
-    // 2. 🟢 CRITICAL FIX: Force a render update
+    // 2. CRITICAL FIX: Force a render update (required when frameloop='demand')
     invalidate(); 
   });
 
   return (
     <mesh>
-      <hemisphereLight intensity={0.25} groundColor='black' /> 
+      {/* Lights optimized for visibility and performance */}
+      <ambientLight intensity={3} /> 
       <spotLight
-        position={[5, 30, 5]} 
+        position={[5, 10, 5]} 
         angle={0.12}
         penumbra={1}
-        intensity={2.5} // Optimized intensity
+        intensity={2} 
         castShadow
-        shadow-mapSize={512} // Optimized shadow map size
+        shadow-mapSize={512} 
       />
       <pointLight 
-        intensity={1.5} // Optimized intensity
-        position={[-15, 15, 0]}
+        intensity={1} 
+        position={[-5, 5, 0]}
       />
+      
       <primitive
         ref={ref} 
         object={scene}
@@ -74,16 +79,28 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
-      // 🟢 OPTIMIZED: Render only on 'demand'
+      // OPTIMIZED: Render only on 'demand' (Required for performance)
       frameloop='demand' 
       shadows
-      dpr={[1, 2]}
-      camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
+      dpr={[1, 1.5]} 
+      camera={{ 
+        position: [20, 3, 5], 
+        fov: 30, // Increased for visibility
+        near: 0.1, 
+        far: 1000, // Increased far clipping
+      }}
+      gl={{ 
+        preserveDrawingBuffer: true,
+        antialias: true,
+        // CRITICAL FIX: Set alpha to true to enable transparency
+        alpha: true 
+      }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
           enableZoom={false}
+          // 🛑 CRITICAL FIX: Disable user-driven rotation entirely
+          enableRotate={false} 
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
