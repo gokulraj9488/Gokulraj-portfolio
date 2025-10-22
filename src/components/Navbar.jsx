@@ -49,7 +49,8 @@ const Navbar = () => {
           </p>
         </Link>
 
-        <ul className='list-none hidden sm:flex flex-row gap-10'>
+        {/* Desktop Navigation Links and Button */}
+        <ul className='list-none hidden sm:flex flex-row gap-10 items-center'>
           {navLinks.map((nav) => (
             <li
               key={nav.id}
@@ -61,8 +62,19 @@ const Navbar = () => {
               <a href={`#${nav.id}`}>{nav.title}</a>
             </li>
           ))}
+          {/* DOWNLOAD RESUME BUTTON (Desktop) */}
+          <li>
+            <a
+              href="/Gokulraj's Resume.pdf"
+              download
+              className='bg-[#9933ff] text-white py-2 px-4 rounded-md text-[16px] font-semibold border-2 border-[#9933ff] transition-all duration-300 hover:bg-transparent hover:border-white'
+            >
+              Download Resume
+            </a>
+          </li>
         </ul>
 
+        {/* Mobile Navigation Menu */}
         <div className='sm:hidden flex flex-1 justify-end items-center'>
           <img
             src={toggle ? close : menu}
@@ -91,6 +103,17 @@ const Navbar = () => {
                   <a href={`#${nav.id}`}>{nav.title}</a>
                 </li>
               ))}
+              {/* DOWNLOAD RESUME BUTTON (Mobile) */}
+              <li>
+                <a
+                  href="/resume.pdf"
+                  download
+                  className='bg-[#9933ff] text-white py-2 px-4 rounded-md text-[16px] font-semibold border-2 border-[#9933ff] transition-all duration-300 hover:bg-transparent hover:border-white'
+                  onClick={() => setToggle(false)} // Close menu after button click
+                >
+                  Download Resume
+                </a>
+              </li>
             </ul>
           </div>
         </div>
